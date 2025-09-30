@@ -1,0 +1,27 @@
+
+POST http://127.0.0.1:8000/api/register
+Content-Type: application/json
+
+{
+  "name": "Ahmad Mubarok",
+  "username": "ahmadmubarok",
+  "password": "ahmadmubarok",
+  "email": "ahmadmubarok@gmail.com"
+}
+
+
+#####
+POST http://127.0.0.1:8000/api/login
+Content-Type: application/json
+
+{
+  "username": "ahmadmubarok",
+  "password": "ahmadmubarok",
+}
+
+
+#####
+POST http://127.0.0.1:8000/api/v1/logout
+Content-Type: application/json
+Authorization: Bearer 
+

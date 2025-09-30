@@ -1,14 +1,45 @@
-import { useState } from "react";
-import { Link } from "react-router";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
-import Label from "../form/Label";
-import Input from "../form/input/InputField";
-import Checkbox from "../form/input/Checkbox";
-import Button from "../ui/button/Button";
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router'
+import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from '../../icons'
+import Label from '../form/Label'
+import Input from '../form/input/InputField'
+import Checkbox from '../form/input/Checkbox'
+import Button from '../ui/button/Button'
+import { apiPost } from '../common/utils/axios'
+import axiosPublic from '../common/utils/axiosPublic'
+import toast from 'react-hot-toast'
 
 export default function SignInForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    try {
+      await axiosPublic.get('/sanctum/csrf-cookie')
+      const res = await axiosPublic.post('/api/login', {
+        username,
+        password,
+      })
+      localStorage.setItem('token', res.data.access_token)
+      console.log(res.data)
+      toast.success('Login berhasil!')
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        'Login gagal. Silakan periksa kembali.'
+      toast.error(message)
+    }
+  }
+
   return (
     <div className="flex flex-col flex-1">
       <div className="w-full max-w-md pt-10 mx-auto">
@@ -83,21 +114,25 @@ export default function SignInForm() {
                 </span>
               </div>
             </div>
-            <form>
+            <form onSubmit={handleLogin}>
               <div className="space-y-6">
                 <div>
                   <Label>
-                    Email <span className="text-error-500">*</span>{" "}
+                    Username <span className="text-error-500">*</span>{' '}
                   </Label>
-                  <Input placeholder="info@gmail.com" />
+                  <Input
+                    placeholder="username"
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label>
-                    Password <span className="text-error-500">*</span>{" "}
+                    Password <span className="text-error-500">*</span>{' '}
                   </Label>
                   <div className="relative">
                     <Input
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
                     />
                     <span
@@ -127,7 +162,7 @@ export default function SignInForm() {
                   </Link>
                 </div>
                 <div>
-                  <Button className="w-full" size="sm">
+                  <Button className="w-full" size="sm" type="submit">
                     Sign in
                   </Button>
                 </div>
@@ -136,7 +171,7 @@ export default function SignInForm() {
 
             <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                Don&apos;t have an account? {""}
+                Don&apos;t have an account? {''}
                 <Link
                   to="/signup"
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
@@ -149,5 +184,5 @@ export default function SignInForm() {
         </div>
       </div>
     </div>
-  );
+  )
 }

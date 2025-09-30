@@ -19,10 +19,13 @@ import AppLayout from './layout/AppLayout'
 import { ScrollToTop } from './components/common/ScrollToTop'
 import Home from './pages/Dashboard/Home'
 import ProtectedRoute from './components/common/ProtectedRoute'
+import { Toaster } from 'react-hot-toast'
+import UserManagement from './pages/User/UserManagement'
 
 export default function App() {
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false} />
       <Router>
         <ScrollToTop />
         <Routes>
@@ -41,6 +44,7 @@ export default function App() {
             />
 
             {/* <Route path="/profile" element={<UserProfiles />} /> */}
+            <Route path="/user" element={<UserManagement />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
 

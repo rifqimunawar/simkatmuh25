@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { DropdownItem } from '../ui/dropdown/DropdownItem'
 import { Dropdown } from '../ui/dropdown/Dropdown'
-import { Link, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
+import { apiPost } from '../common/utils/axios'
+import toast from 'react-hot-toast'
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false)
@@ -16,9 +18,19 @@ export default function UserDropdown() {
 
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate('/signin')
+  const handleLogout = async () => {
+    try {
+      const res = await apiPost('/logout', {})
+      console.log(res.data)
+      localStorage.removeItem('token')
+      toast.success(res.data.message || 'Logout berhasil!')
+      navigate('/signin')
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message?.res.message ||
+        'Logout gagal. Silakan periksa kembali.'
+      toast.error(message)
+    }
   }
   return (
     <div className="relative">
