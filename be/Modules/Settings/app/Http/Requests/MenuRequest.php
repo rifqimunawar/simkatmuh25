@@ -15,6 +15,7 @@ class MenuRequest extends FormRequest
     return [
       'title' => 'required|string|max:255',
       'url' => 'required|string|max:255',
+      'path' => 'nullable',
       'icon' => 'nullable',
       'caret' => 'nullable',
       'is_aktif' => 'nullable',

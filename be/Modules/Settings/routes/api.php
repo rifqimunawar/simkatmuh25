@@ -15,10 +15,15 @@ Route::middleware(['auth:sanctum'])
     Route::post('/menu/store', [MenuController::class, 'store']);
     Route::delete('/menu/{id}', [MenuController::class, 'destroy']);
 
-    Route::get('/role/index', [RoleController::class, 'index']);
-    Route::get('/role/{id}', [RoleController::class, 'show']);
-    Route::post('/role/store', [RoleController::class, 'store']);
-    Route::delete('/role/{id}', [RoleController::class, 'destroy']);
+    Route::get('/roles/index', [RoleController::class, 'index']);
+    Route::get('/roles/{id}', [RoleController::class, 'show']);
+    Route::post('/roles/store', [RoleController::class, 'store']);
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+
+    Route::get('/roleAksesMenu/index', [RoleAksesMenuController::class, 'index']);
+    Route::get('/roleAksesMenu/{id}', [RoleAksesMenuController::class, 'show']);
+    Route::post('/roleAksesMenu/store', [RoleAksesMenuController::class, 'permissionStore']);
+    Route::delete('/roleAksesMenu/{id}', [RoleAksesMenuController::class, 'destroy']);
 
     Route::get('/generalSettings/index', [SettingsController::class, 'index']);
     Route::get('/generalSettings/{id}', [SettingsController::class, 'show']);

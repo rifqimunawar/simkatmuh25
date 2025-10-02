@@ -9,7 +9,7 @@ Route::middleware(['auth:sanctum'])
   ->group(function () {
 
     Route::get('/index', [UserController::class, 'index']);
-    Route::get('/{id}', [UserController::class, 'show']);
+    Route::get('/show/{id}', [UserController::class, 'show']);
     Route::post('/store', [UserController::class, 'store']);
     Route::delete('/{id}', [UserController::class, 'destroy']);
 

@@ -22,6 +22,7 @@ class GlobalController extends Controller
         'id' => $menu->id,
         'title' => $menu->title,
         'href' => $menu->url,
+        'path' => $menu->path,
         'icon' => $this->$menu->icon ?? '-',
         'children' => [],
       ];
@@ -38,7 +39,6 @@ class GlobalController extends Controller
     $tree = $this->buildTree($tree, $menus);
     return response()->json($tree);
   }
-
   private function buildTree(array $nodes, $allMenus)
   {
     foreach ($nodes as &$node) {
@@ -49,6 +49,7 @@ class GlobalController extends Controller
           'id' => $child->id,
           'title' => $child->title,
           'href' => $child->url,
+          'path' => $child->path ?? '-',
           'icon' => $this->$child->icon ?? '-',
           'children' => [],
         ];
@@ -58,5 +59,13 @@ class GlobalController extends Controller
       }
     }
     return $nodes;
+  }
+
+  public function getPath()
+  {
+
+    $dataMenu = Menu::all();
+
+    return response()->json($dataMenu);
   }
 }

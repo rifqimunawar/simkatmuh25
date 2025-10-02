@@ -32,13 +32,39 @@ class RoleAksesMenuController extends Controller
     //   return $cekAkses;
     // }
 
-    $data = RoleAksesMenu::findOrFail($id);
+    $data = RoleAksesMenu::where('role_id', $id)->get();
 
     return response()->json([
       'title' => 'Data Role Akses',
       'data' => $data
     ], 200);
   }
+
+  public function permissionStore(Request $request)
+  {
+    $roleId = $request->role_id;
+    $permissions = $request->permissions;
+
+    foreach ($permissions as $perm) {
+      RoleAksesMenu::updateOrCreate(
+        ['role_id' => $roleId, 'menu_id' => $perm['menu_id']],
+        [
+          'role_id' => $perm['role_id'],
+          'can_read' => $perm['can_read'],
+          'can_create' => $perm['can_create'],
+          'can_update' => $perm['can_update'],
+          'can_delete' => $perm['can_delete'],
+          'updated_by' => Auth::user()->username
+        ]
+      );
+    }
+
+    return response()->json([
+      'message' => 'Success',
+      'detail' => 'Permissions updated'
+    ], 200);
+  }
+
   public function store(RoleAksesMenuRequest $request)
   {
     $data = $request->validated();

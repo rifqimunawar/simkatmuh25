@@ -6,7 +6,9 @@ use App\Helpers\Fungsi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Settings\Http\Requests\RoleAksesMenuRequest;
 use Modules\Settings\Http\Requests\RolesRequest;
+use Modules\Settings\Models\RoleAksesMenu;
 use Modules\Settings\Models\Roles;
 
 class RoleController extends Controller
@@ -39,6 +41,7 @@ class RoleController extends Controller
       'data' => $data
     ], 200);
   }
+
   public function store(RolesRequest $request)
   {
     $data = $request->validated();

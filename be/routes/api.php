@@ -7,7 +7,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
   return $request->user();
 })->middleware('auth:sanctum');
-Route::get('/global/get_menu', [GlobalController::class, 'getMenu']);
+
+Route::middleware(['auth:sanctum'])
+  ->prefix('v1/')
+  ->group(function () {
+    Route::get('global/get_menu', [GlobalController::class, 'getMenu']);
+    Route::get('global/get_path', [GlobalController::class, 'getPath']);
+  });
+
 
 // cek validasi token masih valid atau tidak
 Route::middleware('auth:sanctum')->get('/v1/auth/check', function (Request $request) {

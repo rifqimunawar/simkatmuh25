@@ -14,9 +14,11 @@ return new class extends Migration {
       $table->id();
       $table->string('title');
       $table->string('url');
+      $table->string('path')->nullable();
+      $table->string('component')->nullable();
       $table->string('icon')->nullable();
-      $table->boolean('caret')->default(false);
-      $table->boolean('is_aktif')->default(true);
+      $table->integer('caret')->default(false);
+      $table->integer('is_aktif')->default(true);
       $table->foreignId('parent_id')->nullable();
 
       $table->string('created_by')->default('unknown');

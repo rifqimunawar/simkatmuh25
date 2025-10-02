@@ -10,48 +10,45 @@ import {
 import { apiGet } from '../../components/common/utils/axios'
 import Delete from './Delete'
 import Form from './Form'
+import Loading from '../../components/loading/Loading'
 
-interface User {
+interface DataRoles {
   id: number
-  name: string
-  username: string
-  role_id: number | null
-  img: string | null
-  email: string
-  email_verified_at: string | null
+  role_name: string
+
   deleted_at: string | null
   created_at: string
   updated_at: string
 }
 
-export default function Index() {
-  const [users, setUsers] = useState<User[]>([])
+export default function ListDataRoles() {
+  const [data, setData] = useState<DataRoles[]>([])
   const [loading, setLoading] = useState(true)
 
   // Form modal state
   const [formModal, setFormModal] = useState({
     isOpen: false,
-    userId: null as number | null,
+    dataId: null as number | null,
   })
 
   // Delete modal state
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
-    userId: null as number | null,
-    userName: '',
+    dataId: null as number | null,
+    dataName: '',
   })
 
   useEffect(() => {
-    fetchUsers()
+    fetchDataRoles()
   }, [])
 
-  const fetchUsers = async () => {
+  const fetchDataRoles = async () => {
     try {
       setLoading(true)
-      const res = await apiGet('/user/index')
-      setUsers(res.data.data)
+      const res = await apiGet('settings/roles/index')
+      setData(res.data.data)
     } catch (error) {
-      console.error('Failed to fetch users', error)
+      console.error('Failed to fetch data', error)
     } finally {
       setLoading(false)
     }
@@ -61,64 +58,64 @@ export default function Index() {
   const handleCreate = () => {
     setFormModal({
       isOpen: true,
-      userId: null,
+      dataId: null,
     })
   }
 
-  const handleEdit = (userId: number) => {
+  const handleEdit = (dataId: number) => {
     setFormModal({
       isOpen: true,
-      userId: userId,
+      dataId: dataId,
     })
   }
 
   const handleFormClose = () => {
     setFormModal({
       isOpen: false,
-      userId: null,
+      dataId: null,
     })
   }
 
   const handleFormSuccess = () => {
-    fetchUsers() // Refresh the user list
+    fetchDataRoles() // Refresh the user list
   }
 
   // Delete Modal Handlers
-  const handleDeleteClick = (user: User) => {
+  const handleDeleteClick = (data: DataRoles) => {
     setDeleteModal({
       isOpen: true,
-      userId: user.id,
-      userName: user.name,
+      dataId: data.id,
+      dataName: data.role_name,
     })
   }
 
   const handleDeleteClose = () => {
     setDeleteModal({
       isOpen: false,
-      userId: null,
-      userName: '',
+      dataId: null,
+      dataName: '',
     })
   }
 
   const handleDeleteSuccess = () => {
-    fetchUsers() // Refresh the user list
+    fetchDataRoles() // Refresh the user list
   }
 
-  if (loading) return <div className="p-6">Loading...</div>
+  if (loading) return <Loading />
 
   return (
-    <div className="p-6">
+    <div className="">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          Users Management
+          Role Management
         </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
         >
           <FiPlus size={18} />
-          Add User
+          Add Data
         </button>
       </div>
 
@@ -139,24 +136,13 @@ export default function Index() {
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Full Name
+                  Role Name
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Username
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Email
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
+                  {' '}
                   Action
                 </TableCell>
               </TableRow>
@@ -164,40 +150,37 @@ export default function Index() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {users.length === 0 ? (
+              {data.length === 0 ? (
                 <TableRow>
-                  <td colSpan={5} className="text-center py-4">
+                  <td
+                    colSpan={5}
+                    className="text-gray-500 text-theme-sm dark:text-gray-400 px-5 py-4 sm:px-6 text-center"
+                  >
                     No data available
                   </td>
                 </TableRow>
               ) : (
-                users.map((user, index) => (
-                  <TableRow key={user.id}>
+                data.map((item, index) => (
+                  <TableRow key={item.id}>
                     <TableCell className="text-gray-500 text-theme-sm dark:text-gray-400 px-5 py-4 sm:px-6 text-start">
                       {index + 1}
                     </TableCell>
                     <TableCell className="text-gray-500 text-theme-sm dark:text-gray-400 px-5 py-4 sm:px-6 text-start">
-                      {user.name}
-                    </TableCell>
-                    <TableCell className="text-gray-500 text-theme-sm dark:text-gray-400 px-5 py-4 sm:px-6 text-start">
-                      {user.username}
-                    </TableCell>
-                    <TableCell className="text-gray-500 text-theme-sm dark:text-gray-400 px-5 py-4 sm:px-6 text-start">
-                      {user.email}
+                      {item.role_name}
                     </TableCell>
                     <TableCell className="px-5 py-4 sm:px-6 text-start">
                       <div className="flex gap-3">
                         <button
                           className="text-blue-500 hover:text-blue-700 transition-colors"
-                          onClick={() => handleEdit(user.id)}
-                          title="Edit user"
+                          onClick={() => handleEdit(item.id)}
+                          title="Edit Data"
                         >
                           <FiEdit size={18} />
                         </button>
                         <button
                           className="text-red-500 hover:text-red-700 transition-colors"
-                          onClick={() => handleDeleteClick(user)}
-                          title="Delete user"
+                          onClick={() => handleDeleteClick(item)}
+                          title="Delete Data"
                         >
                           <FiTrash2 size={18} />
                         </button>
@@ -214,7 +197,7 @@ export default function Index() {
       {/* Form Modal */}
       <Form
         isOpen={formModal.isOpen}
-        userId={formModal.userId}
+        dataId={formModal.dataId}
         onClose={handleFormClose}
         onSuccess={handleFormSuccess}
       />
@@ -222,8 +205,8 @@ export default function Index() {
       {/* Delete Modal */}
       <Delete
         isOpen={deleteModal.isOpen}
-        userId={deleteModal.userId}
-        userName={deleteModal.userName}
+        dataId={deleteModal.dataId}
+        dataName={deleteModal.dataName}
         onClose={handleDeleteClose}
         onSuccess={handleDeleteSuccess}
       />
